@@ -1,0 +1,77 @@
+{
+    "name": "Generate Alternate Text BLIP",
+    "version": "v0.0.0",
+    "actions": [
+        {
+            "title": "Set Alternate Description  (BLIP AI)",
+            "name": "pdfix_generate_alternate_text_blip_large",
+            "desc": "Automatically generates alternate text for Figure tags using BLIP large, embedding it into each figure's Alt attribute [Local]",
+            "version": "v0.0.0",
+            "icon": "blip",
+            "category": "Tags",
+            "local": "True",
+            "program": "docker run -v \"${working_directory}:/data\" -w /data --rm pdfix/generate-alternate-text-blip-large:latest generate-alt-text -i \"${input_pdf}\" -o \"/data/${output_pdf}\" --overwrite \"${overwrite}\" --zoom \"${zoom}\" --name \"${license_name}\" --key \"${license_key}\" --model /model",
+            "args": [
+                {
+                    "name": "input_pdf",
+                    "desc": "Input PDF file",
+                    "flags": 2,
+                    "type": "file_path",
+                    "ext": "pdf",
+                    "value": ""
+                },
+                {
+                    "name": "output_pdf",
+                    "desc": "Output PDF file.",
+                    "flags": 4,
+                    "type": "file_path",
+                    "ext": "pdf",
+                    "value": ""
+                },
+                {
+                    "title": "Overwrite",
+                    "desc": "Replace the alternate text if it exists",
+                    "name": "overwrite",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "title": "Rendering Zoom Level",
+                    "name": "zoom",
+                    "desc": "Pages are provided as images that are rendered using this zoom level",
+                    "type": "float",
+                    "value": "2.0"
+                }
+            ]
+        },
+        {
+            "title": "Set Alternate Description (BLIP AI)",
+            "name": "pdfix_generate_alternate_text_from_image_to_text_blip_large",
+            "desc": "Automatically generates alternate text from an image file using BLIP large, saving the description to a text file [Local]",
+            "version": "v0.0.0",
+            "icon": "blip",
+            "category": "Tags",
+            "subtype": "generate_alt_text_img_to_txt",
+            "local": "True",
+            "program": "docker run -v \"${working_directory}:/data\" -w /data --rm pdfix/generate-alternate-text-blip-large:latest generate-alt-text -i \"${input_jpg}\" -o \"/data/${output_txt}\" --model /model",
+            "args": [
+                {
+                    "name": "input_jpg",
+                    "desc": "Input image file containing picture",
+                    "flags": 2,
+                    "type": "file_path",
+                    "ext": "jpg",
+                    "value": ""
+                },
+                {
+                    "name": "output_txt",
+                    "desc": "Output TXT file containing alt text",
+                    "flags": 4,
+                    "type": "file_path",
+                    "ext": "txt",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

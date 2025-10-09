@@ -60,7 +60,12 @@ Used model is [BLIP large](https://huggingface.co/Salesforce/blip-image-captioni
 
 ## License
 
-- PDFix license https://pdfix.net/terms
+This repository uses the [BLIP model](https://huggingface.co/Salesforce/blip-image-captioning-large) from Salesforce, which is licensed under the [BSD 3-Clause License](https://opensource.org/licenses/BSD-3-Clause). See `THIRD_PARTY_LICENSES.md` for details.
+
+The Docker image includes:
+
+- PDFix SDK, subject to [PDFix Terms](https://pdfix.net/terms)
+- BLIP model, BSD 3-Clause License (Salesforce)
 
 Trial version of the PDFix SDK may apply a watermark on the page and redact random parts of the PDF including the scanned image in background. Contact us to get an evaluation or production license.
 

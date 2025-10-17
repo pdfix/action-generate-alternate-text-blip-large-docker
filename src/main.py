@@ -190,10 +190,6 @@ def main() -> None:
             sys.exit(EC_ARG_GENERAL)
         # This happens when --help is used, exit gracefully
         sys.exit(0)
-        if e.code == 0:  # This happens when --help is used, exit gracefully
-            sys.exit(0)
-        print("Failed to parse arguments. Please check the usage and try again.")
-        sys.exit(e.code)
 
     if hasattr(args, "func"):
         # Check for updates only when help is not checked

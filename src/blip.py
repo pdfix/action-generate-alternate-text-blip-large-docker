@@ -1,3 +1,5 @@
+from typing import Any
+
 import torch
 from PIL import Image
 from transformers import BlipForConditionalGeneration, BlipProcessor
@@ -16,8 +18,8 @@ def generate_alt_text_description(image_path: str, model_path: str) -> str:
         Caption of image.
     """
     # Load the processor and model
-    processor = BlipProcessor.from_pretrained(model_path, local_files_only=True)
-    model = BlipForConditionalGeneration.from_pretrained(model_path, local_files_only=True)
+    processor: Any = BlipProcessor.from_pretrained(model_path, local_files_only=True)
+    model: Any = BlipForConditionalGeneration.from_pretrained(model_path, local_files_only=True)
 
     # Load image data
     image: Image.Image = Image.open(image_path)
@@ -25,14 +27,14 @@ def generate_alt_text_description(image_path: str, model_path: str) -> str:
         image = image.convert(mode="RGB")
 
     # Prepare inputs
-    inputs = processor(images=image, return_tensors="pt")
+    inputs: Any = processor(images=image, return_tensors="pt")
 
     # Generate caption
     with torch.no_grad():
-        out = model.generate(**inputs)
+        outputs: Any = model.generate(**inputs)
 
     # Decode caption
-    caption = processor.decode(out[0], skip_special_tokens=True)
+    caption: Any = processor.decode(outputs[0], skip_special_tokens=True)
 
     # Return alt text
-    return caption
+    return str(caption)

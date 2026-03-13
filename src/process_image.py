@@ -1,3 +1,5 @@
+from tqdm import tqdm
+
 from blip import generate_alt_text_description
 
 
@@ -10,7 +12,14 @@ def generate_alt_text_into_txt(input_path: str, output_path: str, model_path: st
         output_path (str): Output path for saving the TXT file.
         model_path (str): Path to BLIP large model. Default value is "model".
     """
-    alt_text_by_blip: str = generate_alt_text_description(input_path, model_path)
+    with tqdm(total=100) as progress_bar:
+        progress_bar.set_description("Processing")
 
-    with open(output_path, "w", encoding="utf-8") as output_file:
-        output_file.write(alt_text_by_blip)
+        alt_text_by_blip: str = generate_alt_text_description(input_path, model_path)
+
+        with open(output_path, "w", encoding="utf-8") as output_file:
+            output_file.write(alt_text_by_blip)
+
+        progress_bar.n = 100
+        progress_bar.set_description("Done")
+        progress_bar.refresh()

@@ -73,3 +73,4 @@ For PDFix SDK licensing or issues, contact `support@pdfix.net`.
 
 - [PDFix Terms](https://pdfix.net/terms)
 - [BLIP large model](https://huggingface.co/Salesforce/blip-image-captioning-large) — [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
+

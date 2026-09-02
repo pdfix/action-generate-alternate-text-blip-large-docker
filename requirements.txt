@@ -3,6 +3,6 @@ pdfix-sdk==8.2.0
 requests==2.33.1
 torch==2.13.0
 tqdm==4.67.1
-transformers==5.5.3
+transformers==5.16.1
 types-requests==2.33.0.20260408
 urllib3==2.7.0

@@ -3,7 +3,7 @@
     "version": "v0.0.0",
     "actions": [
         {
-            "title": "Set Alternate Description  (BLIP AI)",
+            "title": "Set Alternate Description (BLIP AI)",
             "name": "pdfix_generate_alternate_text_blip_large",
             "desc": "Automatically generates alternate text for Figure tags using BLIP large, embedding it into each figure's Alt attribute [Local]",
             "version": "v0.0.0",
@@ -79,7 +79,7 @@
             "progress_regex": "^(?<text>[^:]+):\\s+(?<progress>\\d{1,3})%"
         },
         {
-            "title": "Set Alternate Description (BLIP AI)",
+            "title": "Set Alternate Description from Image (BLIP AI)",
             "name": "pdfix_generate_alternate_text_from_image_to_text_blip_large",
             "desc": "Automatically generates alternate text from an image file using BLIP large, saving the description to a text file [Local]",
             "version": "v0.0.0",

@@ -1,8 +1,16 @@
+import warnings
 from typing import Any
 
 import torch
 from PIL import Image
 from transformers import BlipForConditionalGeneration, BlipProcessor
+from transformers.utils import logging as transformers_logging
+
+# Hugging Face libraries log and show their own progress bars when loading the model; keep only ours
+transformers_logging.disable_progress_bar()
+transformers_logging.set_verbosity_error()
+# Every caption warns: Using the model-agnostic default `max_length` (=21) to control the generation length
+warnings.filterwarnings("ignore", message=".*model-agnostic default `max_length`.*")
 
 
 def generate_alt_text_description(image_path: str, model_path: str) -> str:

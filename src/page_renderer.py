@@ -16,8 +16,12 @@ from pdfixsdk import (
     kImageFormatJpg,
     kRotate0,
 )
+from PIL import Image
 
 from exceptions import PdfixFailedToRenderException
+
+# Largest brightness difference (0-255) still counted as one colour area
+BLANK_BRIGHTNESS_RANGE: int = 8
 
 
 def render_part_of_page(pdfix: Pdfix, doc: PdfDoc, page_num: int, bbox: PdfRect, zoom: float) -> bytearray:
@@ -98,3 +102,18 @@ def render_part_of_page(pdfix: Pdfix, doc: PdfDoc, page_num: int, bbox: PdfRect,
         page.Release()
 
     return data
+
+
+def is_blank_image(image_path: str) -> bool:
+    """
+    Check if image is one colour area, for example an empty white figure.
+
+    Args:
+        image_path (str): Path to image file.
+
+    Returns:
+        True when darkest and lightest pixel differ by at most BLANK_BRIGHTNESS_RANGE.
+    """
+    with Image.open(image_path) as image:
+        darkest, lightest = image.convert("L").getextrema()
+    return lightest - darkest <= BLANK_BRIGHTNESS_RANGE

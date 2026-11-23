@@ -1,3 +1,4 @@
+import re
 import warnings
 from typing import Any
 
@@ -45,4 +46,17 @@ def generate_alt_text_description(image_path: str, model_path: str) -> str:
     caption: Any = processor.decode(outputs[0], skip_special_tokens=True)
 
     # Return alt text
-    return str(caption)
+    return clean_caption(str(caption))
+
+
+def clean_caption(caption: str) -> str:
+    """
+    Remove words that BLIP generates but that have no meaning.
+
+    Args:
+        caption (str): Caption from BLIP.
+
+    Returns:
+        Caption without the artifact word "arafed".
+    """
+    return re.sub(r"\barafed\b\s*", "", caption).strip()

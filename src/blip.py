@@ -14,39 +14,49 @@ transformers_logging.set_verbosity_error()
 warnings.filterwarnings("ignore", message=".*model-agnostic default `max_length`.*")
 
 
-def generate_alt_text_description(image_path: str, model_path: str) -> str:
+class BlipCaptioner:
     """
-    Generate alt text description using Salesforce
-    BLIP (Bootstrapped Language Image Pretraining) large model AI.
-
-    Args:
-        image_path (str): Path to file containing image.
-        model_path (str): Path to BLIP large model. Default value is "model".
-
-    Returns:
-        Caption of image.
+    Salesforce BLIP (Bootstrapped Language Image Pretraining) large model that describes images.
+    The model is loaded once and used for all images.
     """
-    # Load the processor and model
-    processor: Any = BlipProcessor.from_pretrained(model_path, local_files_only=True)
-    model: Any = BlipForConditionalGeneration.from_pretrained(model_path, local_files_only=True)
 
-    # Load image data
-    image: Image.Image = Image.open(image_path)
-    if image.mode != "RGB":
-        image = image.convert(mode="RGB")
+    def __init__(self, model_path: str) -> None:
+        """
+        Load the processor and model.
 
-    # Prepare inputs
-    inputs: Any = processor(images=image, return_tensors="pt")
+        Args:
+            model_path (str): Path to BLIP large model. Default value is "model".
+        """
+        self.processor: Any = BlipProcessor.from_pretrained(model_path, local_files_only=True)
+        self.model: Any = BlipForConditionalGeneration.from_pretrained(model_path, local_files_only=True)
 
-    # Generate caption
-    with torch.no_grad():
-        outputs: Any = model.generate(**inputs)
+    def describe(self, image_path: str) -> str:
+        """
+        Generate alt text description of an image.
 
-    # Decode caption
-    caption: Any = processor.decode(outputs[0], skip_special_tokens=True)
+        Args:
+            image_path (str): Path to file containing image.
 
-    # Return alt text
-    return clean_caption(str(caption))
+        Returns:
+            Caption of image.
+        """
+        # Load image data
+        image: Image.Image = Image.open(image_path)
+        if image.mode != "RGB":
+            image = image.convert(mode="RGB")
+
+        # Prepare inputs
+        inputs: Any = self.processor(images=image, return_tensors="pt")
+
+        # Generate caption
+        with torch.no_grad():
+            outputs: Any = self.model.generate(**inputs)
+
+        # Decode caption
+        caption: Any = self.processor.decode(outputs[0], skip_special_tokens=True)
+
+        # Return alt text
+        return clean_caption(str(caption))
 
 
 def clean_caption(caption: str) -> str:

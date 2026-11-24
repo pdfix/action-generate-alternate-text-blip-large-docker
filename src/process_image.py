@@ -2,7 +2,7 @@ import logging
 
 from tqdm import tqdm
 
-from blip import generate_alt_text_description
+from blip import BlipCaptioner
 from logger import get_logger
 
 logger: logging.Logger = get_logger("app_logger")
@@ -20,7 +20,7 @@ def generate_alt_text_into_txt(input_path: str, output_path: str, model_path: st
     with tqdm(total=100) as progress_bar:
         progress_bar.set_description("Processing")
 
-        alt_text_by_blip: str = generate_alt_text_description(input_path, model_path)
+        alt_text_by_blip: str = BlipCaptioner(model_path).describe(input_path)
         logger.info(f"Alternate text: '{alt_text_by_blip}'")
 
         with open(output_path, "w", encoding="utf-8") as output_file:

@@ -25,7 +25,7 @@ from pdfixsdk import (
 )
 from tqdm import tqdm
 
-from blip import generate_alt_text_description
+from blip import BlipCaptioner
 from exceptions import (
     PdfixFailedToLoadTemplateException,
     PdfixFailedToOpenException,
@@ -83,6 +83,7 @@ class GenerateAltTextsInPdf:
         self.struct_tree: Optional[PdsStructTree] = None
         self.template_query: Optional[PdfTemplateQuery] = None
         self.matching_tags: int = 0
+        self.captioner: Optional[BlipCaptioner] = None
         self.progress_bar: Optional[tqdm] = None
         self.progress_step: float = 0.0
 
@@ -311,7 +312,10 @@ class GenerateAltTextsInPdf:
                 return
 
             # Use AI to get alt description
-            alt_text_by_vission: str = generate_alt_text_description(image_name, self.model_path)
+            # Model is loaded with the first figure and used for all others
+            if self.captioner is None:
+                self.captioner = BlipCaptioner(self.model_path)
+            alt_text_by_vission: str = self.captioner.describe(image_name)
             struct_element.SetAlt(alt_text_by_vission)
             logger.info(f"{struct_element.GetType(True)} on page {page_num + 1}: '{alt_text_by_vission}'")
         except Exception:

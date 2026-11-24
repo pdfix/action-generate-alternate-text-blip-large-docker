@@ -253,11 +253,12 @@ def resolve_regex_template(params_path: Optional[str]) -> str | Path | dict:
 # @KA:logic Which area is described
 # @KA:desc The area of a tag is taken from its BBox attribute; when the tag has no BBox attribute, the area of its
 # content on the page is used. Tags whose area is empty or whose page cannot be found are skipped with a warning in the
-# log. An area of one colour, for example an empty white frame, is not sent to BLIP and gets no alternate text, because
-# BLIP would invent a scene for it. Every new alternate text is written to the log with the tag type and page number.
-# @KA:problem A figure got no alternate text and the log says it is empty.
-# @KA:solution The figure area renders as one colour, so there is nothing to describe. Check the figure in the document;
-# if it is decorative, mark it as an artifact.
+# log. An area of one color, for example an empty white frame, is not sent to BLIP, because BLIP would invent a scene
+# for it; it gets the alternate text "Blank white image", "Blank black image" or "Blank single-color image". Every new
+# alternate text is written to the log with the tag type and page number.
+# @KA:problem A figure got the alternate text "Blank white image".
+# @KA:solution The figure area renders as one color, so there is nothing else to describe. Check the figure in the
+# document; if it is decorative, mark it as an artifact, otherwise check why the picture is not visible.
 # @KA:problem A figure got no alternate text and the log shows a Python error.
 # @KA:solution Rendering or describing this figure failed; the action skips it and continues with the other tags. Open
 # and save the PDF again in a PDF editor and run the action again, or write the alternate text manually.

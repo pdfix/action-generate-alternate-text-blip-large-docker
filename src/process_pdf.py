@@ -34,7 +34,7 @@ from exceptions import (
     PdfixNoTagsException,
 )
 from logger import get_logger
-from page_renderer import is_blank_image, render_part_of_page
+from page_renderer import describe_blank_image, render_part_of_page
 from utils_sdk import authorize_sdk
 
 logger: logging.Logger = get_logger("app_logger")
@@ -306,9 +306,11 @@ class GenerateAltTextsInPdf:
             bf.write(data)
 
         try:
-            # One colour area (white, empty frame) has nothing to describe, BLIP would invent a scene
-            if is_blank_image(image_name):
-                logger.warning(f"{struct_element.GetType(True)} on page {page_num + 1} is empty, no alternate text")
+            # One colour area (white, empty frame) gets a plain description, BLIP would invent a scene
+            blank_description: str = describe_blank_image(image_name)
+            if blank_description:
+                struct_element.SetAlt(blank_description)
+                logger.info(f"{struct_element.GetType(True)} on page {page_num + 1}: '{blank_description}'")
                 return
 
             # Use AI to get alt description

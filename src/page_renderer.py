@@ -22,6 +22,9 @@ from exceptions import PdfixFailedToRenderException
 
 # Largest brightness difference (0-255) still counted as one colour area
 BLANK_BRIGHTNESS_RANGE: int = 8
+# Brightness of a blank image that is described as white or black
+WHITE_BRIGHTNESS: int = 240
+BLACK_BRIGHTNESS: int = 15
 
 
 def render_part_of_page(pdfix: Pdfix, doc: PdfDoc, page_num: int, bbox: PdfRect, zoom: float) -> bytearray:
@@ -104,16 +107,22 @@ def render_part_of_page(pdfix: Pdfix, doc: PdfDoc, page_num: int, bbox: PdfRect,
     return data
 
 
-def is_blank_image(image_path: str) -> bool:
+def describe_blank_image(image_path: str) -> str:
     """
-    Check if image is one colour area, for example an empty white figure.
+    Describe an image that is one colour area, for example an empty white figure.
 
     Args:
         image_path (str): Path to image file.
 
     Returns:
-        True when darkest and lightest pixel differ by at most BLANK_BRIGHTNESS_RANGE.
+        Description like "Blank white image", or empty string when the image has content.
     """
     with Image.open(image_path) as image:
         darkest, lightest = image.convert("L").getextrema()
-    return lightest - darkest <= BLANK_BRIGHTNESS_RANGE
+    if lightest - darkest > BLANK_BRIGHTNESS_RANGE:
+        return ""
+    if darkest >= WHITE_BRIGHTNESS:
+        return "Blank white image"
+    if lightest <= BLACK_BRIGHTNESS:
+        return "Blank black image"
+    return "Blank single-color image"

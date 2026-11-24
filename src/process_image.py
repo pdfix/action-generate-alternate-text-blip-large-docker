@@ -10,7 +10,7 @@ logger: logging.Logger = get_logger("app_logger")
 
 def generate_alt_text_into_txt(input_path: str, output_path: str, model_path: str) -> None:
     """
-    For input image file run vission generate alt text and save it to output file.
+    For input image file run BLIP to generate alt text and save it to output file.
 
     Args:
         input_path (str): Input path to the image file.

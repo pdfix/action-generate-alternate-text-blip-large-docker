@@ -86,6 +86,10 @@ def set_arguments(
                 parser.add_argument("--name", type=str, default="", nargs="?", help="PDFix license name")
             case "output":
                 parser.add_argument("--output", "-o", type=str, required=required_output, help=output_help)
+            case "password":
+                parser.add_argument(
+                    "--password", type=str, default="", help="Password to open a password-protected PDF document."
+                )
             case "overwrite":
                 parser.add_argument(
                     "--overwrite",
@@ -215,8 +219,9 @@ def resolve_regex_template(params_path: Optional[str]) -> str | Path | dict:
 # @KA:solution The PDF is not tagged. Tag it first, for example with an autotagging action, and run the action again.
 # @KA:problem "Failed to open PDF document." and the next log line shows "PDFix SDK error 30" (error 24)
 # @KA:solution The file is not a valid PDF. Open and save it again in a PDF editor and run the action again.
-# @KA:problem "Failed to open PDF document." and the next log line shows "PDFix SDK error 34" (error 24)
-# @KA:solution The PDF is password-protected. Remove the password and run the action again.
+# @KA:problem "PDF document is password-protected. Remove the password with another action first." (error 30)
+# @KA:solution The PDF needs a password to open. Remove the password with another action or in a PDF editor and run the
+# action again. From the command line, pass the password with `--password`.
 # @KA:param output_pdf
 # @KA:desc Where the PDF with the alternate texts is saved, a file with the `.pdf` extension. The folder must already
 # exist; an existing file with the same name is overwritten. Both are checked before the document is processed.
@@ -344,7 +349,15 @@ def generate_alt_text_in_pdf(args, regex_template: str | Path) -> None:
         regex_template (str | Path): Regex or path to template JSON for matching tags.
     """
     processor: GenerateAltTextsInPdf = GenerateAltTextsInPdf(
-        args.input, args.output, args.name, args.key, args.overwrite, args.zoom, args.model, regex_template
+        args.input,
+        args.output,
+        args.name,
+        args.key,
+        args.overwrite,
+        args.zoom,
+        args.model,
+        regex_template,
+        args.password,
     )
     processor.generate_alt_texts_in_pdf()
 
@@ -377,7 +390,7 @@ def main() -> None:
     generate_alt_text_subparser = subparsers.add_parser("generate-alt-text", help=generate_alt_text_help)
     set_arguments(
         generate_alt_text_subparser,
-        ["name", "key", "input", "output", "overwrite", "zoom", "model", "params"],
+        ["name", "key", "input", "output", "password", "overwrite", "zoom", "model", "params"],
         True,
         "The output PDF or TXT file",
     )
